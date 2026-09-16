@@ -1,0 +1,10 @@
+{
+  "name": "jakalmc",
+  "version": "1.0.0",
+  "private": true,
+  "description": "JAKA.LAN (MC) — single-file frontend + Vercel serverless backend",
+  "dependencies": {
+    "@vercel/kv": "^2.0.0",
+    "bcryptjs": "^2.4.3"
+  }
+}
