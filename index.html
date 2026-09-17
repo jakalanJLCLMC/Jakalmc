@@ -1987,6 +1987,33 @@ textarea.field-textarea{
 </style>
 </head>
 <body data-state="gate">
+  <!-- Debug error catcher — sementara, biar error JS keliatan langsung di layar
+       HP tanpa perlu buka DevTools. Aman dihapus nanti kalau semua sudah normal. -->
+  <script>
+    (function () {
+      function showBanner(msg) {
+        var el = document.getElementById('__debug_error_banner__');
+        if (!el) {
+          el = document.createElement('div');
+          el.id = '__debug_error_banner__';
+          el.style.cssText = 'position:fixed;top:0;left:0;right:0;z-index:999999;'
+            + 'background:#c0202a;color:#fff;font:12px/1.5 monospace;'
+            + 'padding:10px 12px;max-height:40vh;overflow:auto;white-space:pre-wrap;';
+          document.documentElement.appendChild(el);
+        }
+        var line = document.createElement('div');
+        line.style.marginBottom = '6px';
+        line.textContent = msg;
+        el.appendChild(line);
+      }
+      window.addEventListener('error', function (e) {
+        showBanner('JS ERROR: ' + e.message + '  (' + (e.filename || '') + ':' + e.lineno + ':' + e.colno + ')');
+      });
+      window.addEventListener('unhandledrejection', function (e) {
+        showBanner('PROMISE ERROR: ' + (e.reason && e.reason.message ? e.reason.message : e.reason));
+      });
+    })();
+  </script>
 <script>
   // Runs before anything below is painted: decide gate vs. main up front so
   // a returning user (name already saved) never sees a flash of the gate
@@ -2551,37 +2578,4 @@ textarea.field-textarea{
     'Waktunya build sesuatu yang baru.',
     'Meteor barusan lewat, sempat lihat?',
     'Santai aja, nggak perlu buru-buru.',
-    'Kopi atau teh malam ini?',
-    'Ditemani bintang, kerjaan jadi ringan.',
-    'Ada yang mau dibangun malam ini?',
-    'Ingat push perubahanmu, ya.',
-    'Selamat datang kembali.',
-    'Semoga koneksimu stabil terus.'
-  ];
-
-  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-  /* ------------------------------------------------------------------------
-   * 2. NIGHT SKY RENDERER
-   * ---------------------------------------------------------------------- */
-
-  const skyCanvas = document.getElementById('sky');
-  const ctx = skyCanvas.getContext('2d');
-
-  let width = 0, height = 0, dpr = Math.min(window.devicePixelRatio || 1, 2);
-  let stars = [];
-  let meteors = [];
-  let clouds = [];
-  let birds = [];
-  let fogBands = [];
-  let pointer = { x: 0, y: 0 };   // normalized -1..1, desktop only
-  let scrollFrac = 0;             // 0..1 rough scroll progress for parallax
-  let rafId = null;
-  let lastTime = 0;
-  let meteorTimer = null;
-  let birdTimer = null;
-
-  // Dynamic Time Theme: which bracket is active, plus a short crossfade
-  // window specifically for the night <-> day-like ambience boundary (the
-  // most visually dramatic swap — stars/meteors versus fog/clouds/birds).
-  let currentTimeThem
+    'K
